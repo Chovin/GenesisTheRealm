@@ -8,7 +8,9 @@ Website for the Genesis community
 
 ## deploying
 
-simply do `npm run deploy`, fill in the commit message for the deployment, and save+close the editor.
+remember to set `BASE_PATH` in your `.env` if where you're deploying it to is served at a subpath.
+
+then simply do `npm run deploy`, fill in the commit message for the deployment, and save+close the editor. This makes a commit on the gh-pages orphaned branch and pushes it to origin
 
 uses `git worktree`. had set up an initial commit as follows:
 ```sh
