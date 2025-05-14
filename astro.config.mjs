@@ -10,6 +10,9 @@ export default defineConfig({
   integrations: [],
   strict: true,
   outDir: './build',
+  build: {
+    format: 'file'
+  },
   buildOptions: {
     sitemap: true,
     robotsTxt: true,
