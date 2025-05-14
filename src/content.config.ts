@@ -8,4 +8,13 @@ const seasons = defineCollection({
     })
 });
 
-export const collections = { seasons }
+const regions = defineCollection({
+    loader: glob({ pattern: "*.md", base: "./regions" }),
+    schema: z.object({
+        title: z.string(),
+        images: z.string().optional(),
+        img: z.string().optional()
+    })
+})
+
+export const collections = { seasons, regions }
