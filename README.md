@@ -6,6 +6,12 @@ Website for the Genesis community
 
 `npm run dev`
 
+## updating content
+
+In general, just follow the format of the markdown/json files you find. Markdown files are in `regions`/`seasons`/`events`.
+
+Each gallery is automatically generated from the image folders in the `public/images` folders. Sub-folders (like `public/images/Seasons/2/special_segment`) have `data.json` files in them which optionally has more information for the pictures
+
 ## deploying
 
 remember to set `BASE_PATH` in your `.env` if where you're deploying it to is served at a subpath.
@@ -28,3 +34,5 @@ then
 git worktree add dist gh-pages
 ```
 this makes `dist/` the orphaned `gh-pages` branch
+
+if you ever find yourself with a missing `dist` folder, you can run `git worktree add dist gh-pages -f` to get it back
