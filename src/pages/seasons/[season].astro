@@ -1,0 +1,188 @@
+---
+import fs, { stat } from 'fs';
+import path from 'path';
+import { pathToFileURL } from 'url';
+
+export async function getStaticPaths() {
+  const imagesBaseDir = 'public/images/Seasons';
+  const seasons = fs.readdirSync(imagesBaseDir).filter((folder) =>
+    fs.statSync(path.join(imagesBaseDir, folder)).isDirectory()
+  );
+
+  return seasons.map((season) => ({
+    params: { season },
+  }));
+}
+
+const { season } = Astro.params;
+const imagesDir = `public/images/Seasons/${season}`;
+const images = fs.readdirSync(imagesDir).filter(file => /\.(png|jpe?g|webp)$/i.test(file));
+const special_folders = fs.readdirSync(imagesDir).map(folder => path.join(imagesDir, folder)).filter((folder) => 
+    fs.statSync(folder).isDirectory()
+)
+
+// process special folders
+const promises = special_folders.map(async dir => {
+    const ddir = path.join(dir, 'data.json')
+    const images = fs.readdirSync(dir).filter(file => /\.(png|jpe?g|webp)$/i.test(file));
+    const card_details = {}
+    images.forEach(ip => {
+        card_details[ip] = {
+            alt_text: path.basename(ip, path.extname(ip))
+        }
+    })
+    let data = {
+        folder_name: path.basename(dir),
+        section_name: path.basename(dir),
+        cards_per_row: 2,
+        card_details,
+        images
+    }
+    if (fs.statSync(ddir).isFile()) {
+        const json = fs.readFileSync(ddir, 'utf-8')
+        const dataJson = JSON.parse(json)
+
+        const od = data.card_details
+        Object.assign(data, dataJson)
+        Object.keys(od).forEach(k => {
+            data.card_details[k] = {...od[k], ...data.card_details[k]}
+        })
+    }
+    return data
+})
+const folders = await Promise.all(promises)
+const CARDS_PER_ROW = 3
+---
+
+<html>
+	<head>
+		<title>Season {season}</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="/assets/css/main.css" />
+		<link rel="icon" href="/images/GenesisLogo.webp" />
+		<noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<h1><a href="index.html">Photo Wall</a></h1>
+						<nav>
+							<a href="index.html#seasons" class="button fit">Home</a>
+						</nav>
+					</header>
+
+				<!-- Wrapper -->
+					<section id="wrapper">
+						<header>
+							<div class="inner">
+								<h2>Season {season}</h2>
+							</div>
+						</header>
+
+						<!-- Content -->
+							<div class="wrapper">
+								<div class="inner">
+									<section>
+                                        {folders.map(folder => (
+                                            <h3 class="major">{folder.section_name}</h3>
+                                            <section class="features">
+                                                {folder.images.map(imgName => (
+                                                    <article>
+                                                        <p><span class="image"><img src={`/images/Seasons/${season}/${folder.folder_name}/${imgName}`} alt={folder.card_details[imgName].alt_text} /></span>{folder.card_details[imgName].caption}</p>
+                                                    </article>
+                                                ))}
+                                            </section> 
+                                        ))}
+
+                                        
+										<h3 class="major">Gallery</h3>
+										<div class="box alt">
+											<div class="row gtr-uniform" id="gallery-images">
+                                                {images.map(image => (
+                                                    <div class={`col-${12/CARDS_PER_ROW}`}><span class="image fit"><img src={`/images/Seasons/${season}/${image}`} alt={`${path.basename(image, path.extname(image))}`}/></span></div>
+                                                ))}
+											</div>
+										</div>
+									</section>
+								</div>
+							</div>
+
+					</section>
+
+				<!-- Footer -->
+					<section id="footer">
+						<div class="inner">
+							<ul class="copyright">
+								<li>✨ Bit#2222</li>
+								<li>🌙 TheMoonTyrant#9115</li>
+								<li>🐨 Samb2o#1455</li>
+								<li>Special thanks to KT#7038, Kit#6292, InGator#3272, rob 誰も#2002, Southern Cross#1033, Dissy#6823</li>
+							</ul>
+					</section>
+
+			</div>
+
+		<!-- Scripts -->
+			<!-- <script src="/assets/js/jquery.min.js"></script>
+			<script src="/assets/js/jquery.scrollex.min.js"></script>
+			<script src="/assets/js/browser.min.js"></script>
+			<script src="/assets/js/breakpoints.min.js"></script>
+			<script src="/assets/js/util.js"></script>
+			<script src="/assets/js/main.js"></script> -->
+            <script define:vars={{images, CARDS_PER_ROW}}>
+                // https://stackoverflow.com/a/19270021
+                function getRandom(arr, n) {
+                    var result = new Array(n),
+                        len = arr.length,
+                        taken = new Array(len);
+                    if (n > len)
+                        throw new RangeError("getRandom: more elements taken than available");
+                    while (n--) {
+                        var x = Math.floor(Math.random() * len);
+                        result[n] = arr[x in taken ? taken[x] : x];
+                        taken[x] = --len in taken ? taken[len] : len;
+                    }
+                    return result;
+                }
+
+                function getFullWidthIndexes(length, targetPercentage, cardsPerRow) {
+                    const nFullWidthImgs = length - cardsPerRow * ~~(
+                        (length - Math.ceil(targetPercentage * length)) / cardsPerRow
+                    )
+
+                    const indexes = [...Array(length).keys()]
+                    const selected = getRandom(indexes, nFullWidthImgs)
+                    selected.sort((a, b) => a - b)
+
+                    let past = 0
+                    for (let i=0; i<selected.length; i++) {
+                        selected[i] -= (selected[i]) % cardsPerRow - past % cardsPerRow
+                        past += 1
+                    }
+
+                    return selected
+                }
+
+                const FULL_PAGE_PERCENTAGE = 0.12
+                const VARIANCE_PERC = .1
+                const targetPerc = FULL_PAGE_PERCENTAGE * (
+                    Math.random() * VARIANCE_PERC * 2 - VARIANCE_PERC + 1
+                )
+
+                const selected = getFullWidthIndexes(images.length, targetPerc, CARDS_PER_ROW)
+                
+                const els = document.getElementById('gallery-images').children
+
+                selected.map(i => els[i]).forEach(el => {
+                    el.classList.remove(`col-${12/CARDS_PER_ROW}`);
+                    el.classList.add('col-12');
+                })
+
+            </script>
+	</body>
+</html>
