@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import { defineConfig } from 'astro/config';
 import { loadEnv } from 'vite';
 
