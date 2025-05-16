@@ -3963,6 +3963,10 @@ input, select, textarea {
 
 		@media screen and (max-width: 980px) {
 
+			:root {
+				--section-margins: 4.75em;
+			}
+
 			.wrapper {
 				margin: 4.75em 0;
 			}
@@ -3971,11 +3975,11 @@ input, select, textarea {
 					height: 4.75em;
 				}
 
-				.wrapper:before {
+				.wrapper:not(.dynamic):before {
 					top: -4.75em;
 				}
 
-				.wrapper:after {
+				.wrapper:not(.dynamic):after {
 					bottom: -4.75em;
 					left: 0;
 				}
@@ -3998,6 +4002,10 @@ input, select, textarea {
 
 		@media screen and (max-width: 736px) {
 
+			:root {
+				--section-margins: 2.5em;
+			}
+
 			.wrapper {
 				margin: 2.5em 0;
 			}
@@ -4006,11 +4014,11 @@ input, select, textarea {
 					height: 2.5em;
 				}
 
-				.wrapper:before {
+				.wrapper:not(.dynamic):before {
 					top: -2.5em;
 				}
 
-				.wrapper:after {
+				.wrapper:not(.dynamic):after {
 					bottom: -2.5em;
 					left: 0;
 				}
