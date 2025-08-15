@@ -1,6 +1,7 @@
 ---
 import fs from 'fs';
 import path from 'path';
+import Head from './Head.astro';
 
 const { dir, returnId, title, cardsPerRow } = Astro.props
 
@@ -44,15 +45,7 @@ const CARDS_PER_ROW = cardsPerRow || 3
 ---
 
 <html>
-	<head>
-		<title>{title}</title>
-		<meta charset="utf-8" />
-        <base href={(import.meta.env.BASE_URL!="/"? import.meta.env.BASE_URL : '') + '/'} />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<link rel="icon" href="images/GenesisLogo.webp" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-	</head>
+	<Head/>
 	<body class="is-preload">
 
 		<!-- Page Wrapper -->
