@@ -13,6 +13,9 @@ seasonsDescs.reverse()
 const regionDescs = await getCollection('regions')
 regionDescs.sort((a, b) => parseInt(a.id.split(' ')[0]) - parseInt(b.id.split(' ')[0]))
 
+const eventsDescs = await getCollection('events')
+eventsDescs.sort((a, b) => parseInt(a.id.split(' ')[0]) - parseInt(b.id.split(' ')[0]))
+
 const BG_COLORS = [
     '#4c5c96',
     '#45558d',
@@ -105,36 +108,18 @@ let prevColor = ''
 				<div class="inner">
 					<h2 class="major">Realm Events</h2>
 					<section class="features" style="margin-bottom: 0%">
-						<article>
-							<a class="image"><img src="images/RealmEvents/CommunityWeekend.webp" alt="" /></a>
-							<h3 class="major">Community Weekend</h3>
-							<p>
-								A weekend meant for hanging out and goofing around on the realm and on VCs while building and improving major realm locations!
-							</p>
-							<!-- <a class="special">Picture Album</a> -->
-						</article>
-						<article>
-							<a class="image"><img src="images/RealmEvents/GBC.webp" alt="" /></a>
-							<h3 class="major">The Genesis Build Competitions (GBC)</h3>
-							<p>
-								GBC are held to promote the creativity of members and create awesome things in the realm!
-							</p>
-							<!-- <a class="special">Picture Album</a> -->
-						</article>
-						<article>
-							<a class="image"><img src="images/RealmEvents/DragonFight.webp" alt="" /></a>
-							<h3 class="major">Community Dragon & Wither Fights</h3>
-							<p>The very first Dragon and Wither Fight of every season is usually done in a group.</p>
-						</article>
-						<article>
-							<a class="image"><img src="images/RealmEvents/Anniversaries.webp" alt="" /></a>
-							<h3 class="major">Genesis Anniversaries</h3>
-							<p>
-								This is celebrated every 26th of June in unique ways every season!
-							</p>
-							<!-- <a class="special">Picture Album</a> -->
-						</article>
-						
+						{eventsDescs.map(async (ed) => {
+							const { Content } = await render(ed)
+							return (
+								<article>
+									<a class="image"><img src={`images/RealmEvents/${ed.data.img}`} alt={ed.data.title} /></a>
+									<h3 class="major">{ed.data.title}</h3>
+									<p>
+										<Content/>
+									</p>
+								</article>
+							)
+						})}
 					</section>
 				</div>
 
