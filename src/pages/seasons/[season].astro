@@ -1,0 +1,20 @@
+---
+import fs from 'fs';
+import path from 'path';
+import Gallery from '../../components/Gallery.astro';
+
+export async function getStaticPaths() {
+  const imagesBaseDir = 'public/images/Seasons';
+  const seasons = fs.readdirSync(imagesBaseDir).filter((folder) =>
+    fs.statSync(path.join(imagesBaseDir, folder)).isDirectory()
+  );
+
+  return seasons.map((season) => ({
+    params: { season },
+  }));
+}
+
+const { season } = Astro.params;
+---
+
+<Gallery dir={`Seasons/${season}`} returnId="seasons" title={`Season ${season}`} />

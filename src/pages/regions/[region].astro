@@ -1,0 +1,26 @@
+---
+import fs from 'fs';
+import path from 'path';
+import Gallery from '../../components/Gallery.astro';
+import { getCollection } from 'astro:content';
+
+
+export async function getStaticPaths() {
+  const imagesBaseDir = 'public/images/Regions';
+  const seasons = fs.readdirSync(imagesBaseDir).filter((folder) =>
+    fs.statSync(path.join(imagesBaseDir, folder)).isDirectory()
+  );
+
+  return seasons.map((region) => ({
+    params: { region },
+  }));
+}
+
+const { region } = Astro.params;
+
+const regionDescs = await getCollection('regions')
+const rd = regionDescs.find(e => e.data.images == region)
+console.log(rd, region, regionDescs)
+---
+
+<Gallery dir={`Regions/${region}`} returnId={region} title={`${rd.data.title}`} />

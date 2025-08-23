@@ -1,0 +1,219 @@
+---
+import { getCollection, render } from 'astro:content';
+import fs from 'fs';
+import { rand } from '../utils/rand.js'
+
+const seasonsDescs = await getCollection('seasons');
+seasonsDescs.sort((a, b) => parseInt(a.id) - parseInt(b.id))
+seasonsDescs.reverse()
+
+const regionDescs = await getCollection('regions')
+regionDescs.sort((a, b) => parseInt(a.id.split(' ')[0]) - parseInt(b.id.split(' ')[0]))
+
+const BG_COLORS = [
+    '#4c5c96',
+    '#45558d',
+    '#3f4e85'
+]
+let prevColor = ''
+---
+<head>
+	<title>Genesis</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<base href={(import.meta.env.BASE_URL!="/"? import.meta.env.BASE_URL : '') + '/'} />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<link rel="icon" href="images/GenesisLogo.webp" />
+	<noscript>
+		<link rel="stylesheet" href="assets/css/noscript.css" />
+	</noscript>
+</head>
+
+<body class="is-preload">
+
+	<!-- Page Wrapper -->
+	<div id="page-wrapper">
+		<!-- Header -->
+		<header id="header" class="alt">
+			<h1><a href="index.html">Genesis Realm 🌱</a></h1>
+			<nav>
+				<a href="#menu">Menu</a>
+			</nav>
+		</header>
+
+		<!-- Menu -->
+		<nav id="menu">
+			<div class="inner">
+				<h2>Menu</h2>
+				<ul class="links">
+					<li><a href="apply.html">Apply</a></li>
+					<li><a href="#contact">Contact</a></li>
+				</ul>
+				<a  class="close">Close</a>
+			</div>
+		</nav>
+
+		<!-- Banner -->
+		<section id="banner">
+			<div class="inner">
+				<div class="logo"><img src="images/GenesisLogo.webp"></img></div>
+				<h2>Genesis 🌱</h2>
+				<p>A Vanilla Survival Bedrock Realm est. 2016</p>
+			</div>
+		</section>
+
+		<!-- Content -->
+		<div class="wrapper" >
+			<div class="inner">
+				<section>
+					<h2 class="major">About Us</h3>
+						<p>
+						Genesis is a survival bedrock realm founded in June of 2016. Our realm features pure vanilla
+						gameplay on hard difficulty, with achievements enabled!
+						<br> <br>
+						We're a tight-knit community of players from all over the world, each with their own play style,
+						interests, and strengths. We value community and collaboration, creativity, and respect. Genesis
+						has had setbacks and challenges over the years, but we meet those challenges head-on and
+						continue to evolve and improve to the best of our ability. We're fun, goofy, and a family-like
+						group who really enjoy playing Minecraft together!
+						</p>
+				</section>
+			</div>
+		</div>
+
+		<!-- Wrapper -->
+		<section id="wrapper">
+			{
+			regionDescs.map(async (rd) => {
+				const { Content } = await render(rd)
+				
+				let color_choices = [...BG_COLORS].filter(c => c !== prevColor)
+				// this rand is supposed to be seeded with a constant seed
+				// so why do the colors keep changing?
+				let color = color_choices[~~(rand()*color_choices.length)]
+				prevColor = color
+
+				return (
+					<section id={rd.data.images} class="wrapper spotlight dynamic" style={`--bg-color: ${color}`}>
+						<div class="inner">
+							{ rd.data.img && <a  class="image"><img src={`images/Regions/${rd.data.images}/${rd.data.img}`} alt="" /></a>}
+							<div class="content">
+								<h2 class="major">{rd.data.title}</h2>
+								<Content />
+								{ rd.data.images && <a href={`regions/${rd.data.images}`} class="special">Picture album</a> }
+							</div>
+						</div>
+					</section>
+				)
+			})}
+
+			<!-- Six -->
+			<section id="six" class="wrapper alt style1">
+				<div class="inner">
+					<h2 class="major">Realm Events</h2>
+					<section class="features" style="margin-bottom: 0%">
+						<article>
+							<a class="image"><img src="images/RealmEvents/CommunityWeekend.webp" alt="" /></a>
+							<h3 class="major">Community Weekend</h3>
+							<p>
+								A weekend meant for hanging out and goofing around on the realm and on VCs while building and improving major realm locations!
+							</p>
+							<!-- <a class="special">Picture Album</a> -->
+						</article>
+						<article>
+							<a class="image"><img src="images/RealmEvents/GBC.webp" alt="" /></a>
+							<h3 class="major">The Genesis Build Competitions (GBC)</h3>
+							<p>
+								GBC are held to promote the creativity of members and create awesome things in the realm!
+							</p>
+							<!-- <a class="special">Picture Album</a> -->
+						</article>
+						<article>
+							<a class="image"><img src="images/RealmEvents/DragonFight.webp" alt="" /></a>
+							<h3 class="major">Community Dragon & Wither Fights</h3>
+							<p>The very first Dragon and Wither Fight of every season is usually done in a group.</p>
+						</article>
+						<article>
+							<a class="image"><img src="images/RealmEvents/Anniversaries.webp" alt="" /></a>
+							<h3 class="major">Genesis Anniversaries</h3>
+							<p>
+								This is celebrated every 26th of June in unique ways every season!
+							</p>
+							<!-- <a class="special">Picture Album</a> -->
+						</article>
+						
+					</section>
+				</div>
+
+				<div class="inner">
+					<h2 id="seasons" class="major">Seasonal Albums</h2>
+					<p>
+						View Genesis throughout the years! <br>
+						<b>Builds:</b> Our lovely and creative members (Thank you for all your hard work in making Genesis what it is!) <br>
+						<b>Photographers: </b> Samb2o and TheMoonTyrant
+					</p>
+					<section class="features">
+						{seasonsDescs.map(async (sd) => {
+							const { Content } = await render(sd)
+							const images = fs.readdirSync(`public/images/Seasons/${sd.id}`).filter(file => /\.(png|jpe?g|webp)$/i.test(file));
+							let thumb = sd.data.img
+							if (!thumb) {
+								thumb = images[~~(Math.random()*images.length)]
+							}
+							return (
+								<article>
+									<a class="image"><img src={`images/Seasons/${sd.id}/${thumb}`} alt="" /></a>
+									<h3 class="major">Season {sd.id}</h3>
+									<Content />
+									{images.length > 1 && <a href={`seasons/${sd.id}.html`} class="special">Photo album</a>}
+								</article>
+							)
+						})}
+					</section>
+					<!-- <ul class="actions">
+						<li><a class="button">Browse All</a></li>
+					</ul> -->
+				</div>
+			</section>
+	</div>
+	</div>
+
+
+	</section>
+
+	<!-- Footer -->
+	<section id="footer">
+		<div class="inner">
+
+			<h2 class="major">Contact Us!</h2>
+			<ul id="contact" class="contact">
+				<li class="icon solid fa-envelope"><a
+						href="mailto:contact@genesistherealm.com">contact@genesistherealm.com</a></li>
+				<li class="icon brands fa-discord">
+					<p>
+						Mod Team Discords: <br />
+						rudenoodledeux <br	/>
+						kaubee <br />
+						samb2o <br />
+					</p>
+				</li>
+			</ul>
+			<ul class="copyright">
+				<li>✨ bit</li>
+				<li>🌙 moon</li>
+				<li>🐨 samb2o</li>
+				<li>Special thanks to KT, Kit, InGator, rob, Southern Cross, Dissy</li>
+			</ul>
+		</div>
+	</section>
+	</div>
+
+	<!-- Scripts -->
+	<script is:inline src="assets/js/jquery.min.js"></script>
+	<script is:inline src="assets/js/jquery.scrollex.min.js"></script>
+	<script is:inline src="assets/js/browser.min.js"></script>
+	<script is:inline src="assets/js/breakpoints.min.js"></script>
+	<script is:inline src="assets/js/util.js"></script>
+	<script is:inline src="assets/js/main.js"></script>
+
+</body>
