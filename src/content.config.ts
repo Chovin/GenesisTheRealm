@@ -25,4 +25,12 @@ const events = defineCollection({
     })
 })
 
-export const collections = { seasons, regions, events }
+const members = defineCollection({
+    loader: glob({pattern: "*.md", base: "./members"}),
+    schema: z.object({
+        img: z.string(),
+        name: z.string()
+    })
+})
+
+export const collections = { seasons, regions, events, members }

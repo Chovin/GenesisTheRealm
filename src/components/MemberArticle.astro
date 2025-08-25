@@ -1,0 +1,57 @@
+---
+const { id, name, img } = Astro.props
+const imgPath = `images/Members/${img}`
+console.log(imgPath)
+---
+
+<div class="member-article">
+    <a class="image"><img src={imgPath} alt={`${id}`} /></a>
+    <h3 class="major">{name}</h3>
+    <slot />
+</div>
+
+<style define:vars={{ imgUrl: `url("${imgPath}")`}}>
+
+.member-article a.image {
+	position: relative;
+	display: flex;
+}
+
+.member-article a.image::before {
+	position: absolute;
+	content: "";
+	top: 0;
+	left: 0;
+    z-index: 0;
+	width: 100%;
+	height: 100%;
+    background-image: var(--imgUrl);
+    background-position: center;
+    background-size: cover;
+    opacity: 0.2;
+}
+.member-article img {
+    z-index: 1;
+	object-fit: contain;
+	max-height: 400px;
+}
+
+.member-article .major {
+	text-transform: none;
+}
+
+.member-article {
+	margin-top: 1.75em;
+    padding: 1.75em 1.75em 0.1em 1.75em;
+    background-color: #353849;
+    border-radius: 5px;
+    /* margin: 1.5em 3em 1.5em 0; */
+}
+.member-article a {
+	margin: -1.75em -1.75em 1.5em -1.75em;
+}
+.member-article img {
+	width: calc(100%);
+}
+
+</style>
