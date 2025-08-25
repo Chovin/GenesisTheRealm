@@ -20,7 +20,6 @@ const { region } = Astro.params;
 
 const regionDescs = await getCollection('regions')
 const rd = regionDescs.find(e => e.data.images == region)
-console.log(rd, region, regionDescs)
 ---
 
 <Gallery dir={`Regions/${region}`} returnId={region} title={`${rd.data.title}`} />
