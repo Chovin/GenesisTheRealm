@@ -1,5 +1,5 @@
 ---
-img: mal.png
+img: mal.webp
 name: Mal
 ---
 Hello! This is your favorite not suspicious person, dun duuuuuuunnn... MAL!!

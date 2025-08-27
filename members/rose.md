@@ -1,5 +1,5 @@
 ---
-img: rose.png
+img: rose.webp
 name: rose
 ---
 goats.
