@@ -1,21 +1,16 @@
-<!DOCTYPE HTML>
+---
+import Head from '../components/Head.astro'
+// import Footer from '../components/Footer.astro'
+import Scripts from '../components/Scripts.astro'
+---
+
 <!--
 	Solid State by HTML5 UP
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
-<html>
 
-<head>
-	<title>How to Join</title>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<link rel="stylesheet" href="assets/css/main.css" />
-	<link rel="icon" href="images/GenesisLogo.webp" />
-	<noscript>
-		<link rel="stylesheet" href="assets/css/noscript.css" />
-	</noscript>
-</head>
+<Head title="How to Join" />
 
 <body class="is-preload">
 
@@ -221,14 +216,34 @@
 
 	</div>
 
-	<!-- Scripts -->
-	<script src="assets/js/jquery.min.js"></script>
-	<script src="assets/js/jquery.scrollex.min.js"></script>
-	<script src="assets/js/browser.min.js"></script>
-	<script src="assets/js/breakpoints.min.js"></script>
-	<script src="assets/js/util.js"></script>
-	<script src="assets/js/main.js"></script>
+	<Scripts />
 
 </body>
 
-</html>
+<script>
+	import 'node-snackbar/dist/snackbar.min.css';
+	import Snackbar from 'node-snackbar/dist/snackbar.min.js'
+	const closed_until = (import.meta.env.PUBLIC_APPS_CLOSED_UNTIL || "").trim()
+	if (closed_until) {
+		setTimeout(() => {
+			Snackbar.show({
+				text: `Applications are closed until ${closed_until}`, 
+				pos: 'top-center', 
+				actionTextColor: '#aa5555',
+				duration: 100*1000
+			})
+		}, 1000)
+	}
+</script>
+
+<style is:global>
+	.snackbar-container.top-center {
+		/* the appbar is set to 10000.. */
+		z-index: 10001;
+	}
+	.snackbar-container .action {
+		box-shadow: none;
+		/* the color is already set to !important elsewhere.. */
+		color: #55cc55 !important;
+	}
+</style>

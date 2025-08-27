@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/lilacstella/GenesisTheRealm#readme",
   "dependencies": {
-    "astro": "^5.7.12"
+    "astro": "^5.7.12",
+    "node-snackbar": "^0.1.16"
   },
   "devDependencies": {
     "serve": "^14.2.4"
