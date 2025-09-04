@@ -53,9 +53,9 @@ const CARDS_PER_ROW = cardsPerRow || 3
 
 				<!-- Header -->
 					<header id="header">
-						<h1><a href="index.html">Photo Wall</a></h1>
+						<h1><a onclick="go_back()">Photo Wall</a></h1>
 						<nav>
-							<a href={`index.html#${returnId}`} class="button fit">Home</a>
+							<a onclick="go_back()" class="button fit">Home</a>
 						</nav>
 					</header>
 
@@ -169,6 +169,16 @@ const CARDS_PER_ROW = cardsPerRow || 3
                     el.classList.add('col-12');
                 })
 
+            </script>
+            <script is:inline>
+                function go_back() {
+                    const qs = window.location.search;
+                    const urlParams = new URLSearchParams(qs)
+
+                    const crumb = urlParams.get('crumb');
+                    const id = urlParams.get('id')
+                    window.location.href = crumb ? `${crumb}#${id}` : 'index.html'
+                }
             </script>
 	</body>
 </html>

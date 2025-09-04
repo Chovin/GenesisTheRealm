@@ -99,7 +99,7 @@ let prevColor = ''
 							<div class="content">
 								<h2 class="major">{rd.data.title}</h2>
 								<Content />
-								{ rd.data.images && <a href={`regions/${rd.data.images}`} class="special">Picture album</a> }
+								{ rd.data.images && <a href={`regions/${rd.data.images}?crumb=index.html&id=${rd.data.images}`} class="special">Picture album</a> }
 							</div>
 						</div>
 					</section>
@@ -142,11 +142,11 @@ let prevColor = ''
 								thumb = images[~~(Math.random()*images.length)]
 							}
 							return (
-								<article>
+								<article id={`season${sd.id}`}>
 									<a class="image"><img src={`images/Seasons/${sd.id}/${thumb}`} alt="" /></a>
 									<h3 class="major">Season {sd.id}</h3>
 									<Content />
-									{images.length > 1 && <a href={`seasons/${sd.id}.html`} class="special">Photo album</a>}
+									{images.length > 1 && <a href={`seasons/${sd.id}.html?crumb=index.html&id=season${sd.id}`} class="special">Photo album</a>}
 								</article>
 							)
 						})}
