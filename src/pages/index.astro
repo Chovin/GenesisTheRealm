@@ -10,6 +10,7 @@ import MemberArticle from '../components/MemberArticle.astro';
 const seasonsDescs = await getCollection('seasons');
 seasonsDescs.sort((a, b) => parseInt(a.id) - parseInt(b.id))
 seasonsDescs.reverse()
+const displaySeasons = 5
 
 const regionDescs = await getCollection('regions')
 regionDescs.sort((a, b) => parseInt(a.id.split(' ')[0]) - parseInt(b.id.split(' ')[0]))
@@ -134,7 +135,7 @@ let prevColor = ''
 						<b>Photographers: </b> Samb2o and TheMoonTyrant
 					</p>
 					<section class="features">
-						{seasonsDescs.map(async (sd) => {
+						{seasonsDescs.slice(0,displaySeasons).map(async (sd) => {
 							const { Content } = await render(sd)
 							const images = fs.readdirSync(`public/images/Seasons/${sd.id}`).filter(file => /\.(png|jpe?g|webp)$/i.test(file));
 							let thumb = sd.data.img
@@ -150,6 +151,19 @@ let prevColor = ''
 								</article>
 							)
 						})}
+						<article id="all-seasons">
+							<a class="image">
+								<img src={`images/Seasons/7/S796.webp`} alt="" />
+								<div class="dot-container">
+									<div class="dot"></div>
+									<div class="dot"></div>
+									<div class="dot"></div>
+								</div>
+							</a>
+							<h3 class="major">See all seasons</h3>
+							<p>2016 - Present</p>
+							<a href="seasons.html" class="special">All Seasons</a>
+						</article>
 					</section>
 					<!-- <ul class="actions">
 						<li><a class="button">Browse All</a></li>
@@ -291,4 +305,38 @@ let prevColor = ''
 	}
 }
 
+</style>
+
+<style>
+	#all-seasons .image {
+		position: relative;
+	}
+	#all-seasons .image::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 1;
+		background-color: rgba(0,0,0,0.75);
+
+	}
+
+	.dot-container {
+		position: absolute;
+		top: 50%;
+		display: flex;
+		width: 100%;
+		height: 100%;
+		justify-content: space-evenly;
+		padding: 0 2em;
+	}
+	.dot {
+		width: 2em;
+		height: 2em;
+		background-color: white;
+		border-radius: 50%;
+		z-index: 2;
+	}
 </style>
