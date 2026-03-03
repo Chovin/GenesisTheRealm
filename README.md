@@ -12,6 +12,8 @@ In general, just follow the format of the markdown/json files you find. Markdown
 
 Each gallery is automatically generated from the image folders in the `public/images` folders. Sub-folders (like `public/images/Seasons/2/special_segment`) have `data.json` files in them which optionally has more information for the pictures
 
+Don't forget to compress the images into `.webp` before uploading! You can do so by running `./compress.sh <path/to/input/folder_or_file> <path/to/output/folder>`
+
 If you'd like to close applications, simply set `PUBLIC_APPS_CLOSED_UNTIL` in `.env` to the date applications will be opening again. This will cause a popup on the apply page letting the person know applications are closed. Leave the value blank to reopen applications.
 
 ## deploying
